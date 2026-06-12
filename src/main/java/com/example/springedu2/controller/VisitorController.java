@@ -3,6 +3,7 @@ package com.example.springedu2.controller;
 import com.example.springedu2.entity.Visitor;
 import com.example.springedu2.repository.VisitorRepository;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,10 +14,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@RequiredArgsConstructor
 public class VisitorController {
 
-    @Autowired
-    private VisitorRepository visitorRepository;
+    // 1. @Autowired 이용 생성자 주입
+    // @Autowired
+    // private VisitorRepository visitorRepository;
+
+    // 2. 생성자 주입 : 요즘 방식
+    // private VisitorRepository visitorRepository;
+    // public  VisitorController(VisitorRepository visitorRepository) {
+    //    this.visitorRepository = visitorRepository;
+    // }
+
+    // 3. 생성자 주입 다른 방법, final 가능
+    // @RequiredArgsConstructor 필수 : Lombok 필수
+    private final VisitorRepository visitorRepository;
 
     @GetMapping("/vlist")
     public ModelAndView vlist() {
@@ -37,8 +50,8 @@ public class VisitorController {
                           BindingResult bindingResult,
                           Model model) {
 
-        System.out.println("visitor" + visitor);
-        System.out.println("bindingResult" + bindingResult);
+        System.out.println("visitor:" + visitor);
+        System.out.println("bindingResult:" + bindingResult);
         if(bindingResult.hasErrors()) {
             model.addAttribute("msg", "이름과 내용을 모두 입력하세요");
             return "visitorView"; // visitorView.html
