@@ -4,7 +4,6 @@ import com.example.springedu2.entity.Visitor;
 import com.example.springedu2.repository.VisitorRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -12,6 +11,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,7 +34,22 @@ public class VisitorController {
 
     @GetMapping("/vlist")
     public ModelAndView vlist() {
-        return null;
+        List<Visitor> visitors = visitorRepository.findAll(); // 목록 조회
+        return visitorView(visitors, null);
+    }
+
+    private ModelAndView visitorView(List<Visitor> visitors, String buttonText) {
+        ModelAndView mv = new ModelAndView("visitorView");
+        // mv.setViewName("visitorView");   // visitorView.html(Model 사용) - thymeleaf
+        if (visitors.isEmpty()) {
+            mv.addObject("msg", "조회된 결과가 없습니다.");
+        } else {
+            mv.addObject("vList", visitors);
+        }
+        if (buttonText != null) {
+            mv.addObject("buttonText", buttonText);
+        }
+        return mv;
     }
 
     @GetMapping("/vsearch")
